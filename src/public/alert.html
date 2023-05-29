@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kvarta pro Tercii</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: rgb(54, 54, 54);
+        }
+        h1{
+            font-size: 15vw;
+            color: red;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>!!!&nbspALERT&nbsp!!!</h1>
+
+    <script>
+        const text = document.querySelector('h1');
+        window.setInterval(() => {
+            text.style.display = 'none';
+            setTimeout(() => {
+                text.style.display = 'block';
+            }, 700)
+        }, 1500);
+    </script>
+</body>
+</html>

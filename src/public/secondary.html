@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kvarta pro Tercii</title>
+
+    <style>
+        body{
+            background-color: black;
+        }
+    </style>
+
+</head>
+<body>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        let socket = io();
+        socket.on('console_msg', msg => {
+            if (msg.correct === true){
+                location.href = '/?page=alert?audio=false'
+            }
+        })
+
+    </script>
+</body>
+</html>

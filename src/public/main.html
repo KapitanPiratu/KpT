@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kvarta pro Tercii</title>
+
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: rgb(54, 54, 54);
+        }
+        input{
+            background-color: rgb(107, 107, 107);
+            border-color: rgb(255, 255, 255);
+            border-style: solid;
+            border-width: 0.3rem;
+            border-radius: 16px;
+            min-width: 10rem;
+            min-height: 10rem;
+            max-width: 10rem;
+            max-height: 10rem;
+            margin: 1rem;
+            font-size: 6rem;
+            text-align: center;
+            color: #fff;
+        }
+        .numbers{
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        button{
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 20rem;
+            min-height: 4rem;
+            background-color: rgb(107, 107, 107);
+            border-color: #fff;
+            border-style: solid;
+            border-radius: 16px;
+            border-width: 0.3rem;
+            cursor: pointer;
+            color: #fff;
+            font-size: 2rem;
+        }
+        button:hover{
+            background-color: rgb(100, 100, 100);
+            border-color: #e6e6e6;
+        }
+        .one{
+            background-color: rgb(170, 0, 0);
+        }
+        .two{
+            background-color: rgb(0, 170, 0);
+        }
+        .three{
+            background-color: rgb(0, 0, 170);
+        }
+        .four{
+            background-color: rgb(182, 182, 2);
+        }
+    </style>
+</head>
+<body>
+    
+    <form action="">
+        <div class="numbers">
+            <input oninput="checkNumbers(1)" id="1" type="text" class="one">
+            <input oninput="checkNumbers(2)" id="2" type="text" class="two">
+            <input oninput="checkNumbers(3)" id="3" type="text" class="three">
+            <input oninput="checkNumbers(4)" id="4" type="text" class="four">
+        </div>
+
+        <button id="btn">Potvrdit</button>
+    </form>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+    
+        function checkNumbers(index) {
+            const el = document.getElementById(index.toString());
+            if (el.value && index < 4) {
+                const el2 = document.getElementById(`${index + 1}`);
+                el2.focus();
+                el2.select();
+            }
+        }
+        window.addEventListener('load', () => {
+            const el = document.getElementById('1');
+            el.focus();
+            el.select();
+        })
+
+        let socket = io();
+        
+        document.getElementById('btn').addEventListener('click', e => {
+            e.preventDefault()
+            let msg = '';
+            msg += document.getElementById('1').value;
+            msg += document.getElementById('2').value;
+            msg += document.getElementById('3').value;
+            msg += document.getElementById('4').value;
+
+            socket.emit('check_answer', msg);
+
+            document.querySelectorAll('input').forEach(el => el.value = '')
+        });
+
+        socket.on('console_msg', msg => {
+            if(msg.correct === false){
+                window.alert('Špatný kód')
+            }else if (msg.correct === true){
+                location.href = '/?page=alert&audio=true'
+            }
+        })
+
+    </script>
+</body>
+</html>
