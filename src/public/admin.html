@@ -28,15 +28,47 @@
             border-width: 0.3rem;
             border-style: solid;
             border-radius: 16px;
+            position: relative;
         }
         p{
-            margin-top: 1rem;
+            margin-top: 0.1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .console-ui{
+            position: absolute;
+            bottom: 0;
+            border-color: #fff;
+            border-width: 0.3rem;
+            border-style: solid;
+            border-radius: 4px;
+        }
+        input.console-ui{
+            min-width: 35vh;
+            min-height: 5vh;
+            left: 0;
+            background-color: rgb(143, 143, 143);
+            color: #fff;
+            padding: 0.3rem;
+            font-size: 1rem;
+        }
+        button.console-ui{
+            right: 0.4vw;
+            min-height: 5vh;
+            min-width: 4.5vw;
+            background-color: rgb(143, 143, 143);
+            color: #fff;
+        }
+        button.console-ui:hover{
+            background-color: rgb(126, 126, 126);
         }
     </style>
 </head>
 <body>
 
-    <div class="console" id="console"></div>
+    <div class="console" id="console">
+        <input class="console-ui" type="text">
+        <button class="console-ui" onclick="sendMsg()">send</button>
+    </div>
 
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
@@ -48,8 +80,21 @@
         socket.on('console_msg', msg => {
             let element = document.createElement('p');
             element.innerHTML = msg.msg;
-            document.getElementById('console').appendChild(element);
-            document.getElementById('console').scrollTo(0);
+            const terminal = document.getElementById('console')
+            terminal.insertBefore(element, document.querySelector('input'));
+            terminal.scrollTo(0,terminal.scrollHeight);
+        })
+
+        function sendMsg() {
+            const command = document.querySelector('input').value;
+            if (command) socket.emit('console_command', { command: command.split(' '), msg: `> ${command}` });
+            document.querySelector('input').value = ''
+        }
+
+        window.addEventListener('keydown', k => {
+            if (k.keyCode == 13){
+                sendMsg();
+            }
         })
     </script>
 </body>

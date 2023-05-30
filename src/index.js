@@ -6,7 +6,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const SECRET = '1234' //testing value
+const baseCode = '1234';
+let code = baseCode;
 
 app.use(express.static('public'));
 
@@ -51,10 +52,37 @@ io.on('connection', (socket) => {
     
     socket.on('connection_with_type', type => {
         io.emit('console_msg', { msg: `a device connected as ${type} (IP: "${socket.handshake.address}")`});
+        io.emit('console_msg', { msg: `loaded secret code: ${code}`});
+    })
+
+    socket.on('console_command', msg => {
+        io.emit('console_msg', msg)
+        switch (msg.command[0]) {
+            case 'code':
+                io.emit('console_msg', { msg: `the current secret code is: ${code}` });
+                break;
+            case 'changecode':
+            case 'cc':
+                if (msg.command[1] == 'base'){
+                    code = baseCode;
+                    io.emit('console_msg', { msg: `successfully changed the code to the base code: ${code}` });
+                }else if (msg.command[1].length == 4){
+                    code = msg.command[1];
+                    io.emit('console_msg', { msg: `successfully changed the code - new code: ${code}` });
+                }else{
+                    io.emit('console_msg', { msg: '!! failed to change the code: wrong code' });
+                }
+                break;
+            case 'activate':
+                io.emit('console_msg', { msg: 'Activated animation', correct: true })
+            default:
+                break;
+        }
+
     })
 
     socket.on('check_answer', ans => {
-        if (ans == SECRET){
+        if (ans == code){
             io.emit('console_msg', { msg: `Answer was submitted: "${ans}" - CORRECT`, correct: true })
         } else{
             io.emit('console_msg', { msg: `Answer was submitted: "${ans}" - WRONG`, correct: false })
