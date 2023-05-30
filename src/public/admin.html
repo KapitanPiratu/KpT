@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kvarta pro Tercii</title>
     <style>
+        
         *{
             padding: 0;
             margin: 0;
@@ -16,14 +17,18 @@
             color: #fff;
         }
         .console{
-            overflow: scroll;
+            overflow: auto;
             overflow-x: hidden;
             flex-direction: column-reverse;
-            margin: 1rem;
+            width: 93vw;
+            height: 69.5vh;
+        }
+        .console-wrapper{
             padding: 1rem;
+            margin: 1vw;
             background-color: rgb(37, 37, 37);
-            width: 23vw;
-            height: 38vw;
+            width: 95vw;
+            height: 80.5vh;
             border-color: #fff;
             border-width: 0.3rem;
             border-style: solid;
@@ -43,8 +48,10 @@
             border-radius: 4px;
         }
         input.console-ui{
-            min-width: 35vh;
+            min-width: 80vw;
+            max-width: 80vw;
             min-height: 5vh;
+            max-height: 5vh;
             left: 0;
             background-color: rgb(143, 143, 143);
             color: #fff;
@@ -54,22 +61,24 @@
         button.console-ui{
             right: 0.4vw;
             min-height: 5vh;
-            min-width: 4.5vw;
+            min-width: 15vw;
+            max-width: 15vw;
             background-color: rgb(143, 143, 143);
             color: #fff;
         }
         button.console-ui:hover{
             background-color: rgb(126, 126, 126);
         }
+    
     </style>
 </head>
 <body>
 
-    <div class="console" id="console">
+    <div class="console-wrapper">
+        <div class="console" id="console"></div>
         <input class="console-ui" type="text">
         <button class="console-ui" onclick="sendMsg()">send</button>
     </div>
-
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
@@ -81,7 +90,7 @@
             let element = document.createElement('p');
             element.innerHTML = msg.msg;
             const terminal = document.getElementById('console')
-            terminal.insertBefore(element, document.querySelector('input'));
+            terminal.appendChild(element);
             terminal.scrollTo(0,terminal.scrollHeight);
         })
 
