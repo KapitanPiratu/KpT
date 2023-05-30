@@ -1,3 +1,4 @@
+const fs = require('fs')
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -7,10 +8,11 @@ const io = new Server(server);
 
 const SECRET = '1234' //testing value
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
     const page = req.query['page'];
     let path;
-    console.log(page)
     switch (page) {
         case 'main':
             path = '/public/main.html';
@@ -31,11 +33,26 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + path);
 });
 
+app.get('/audio', (req, res) => {
+    const file = __dirname + '/public/alarm.mp3';
+    fs.exists(file, (exists) => {
+        if (exists) {
+            const rstream = fs.createReadStream(file);
+            rstream.pipe(res);
+        } else {
+            res.sendStatus(404);
+        }
+    });
+})
+
 //handling sockets
 io.on('connection', (socket) => {
     console.log('a user connected');
-    io.emit('console_msg', { msg: `a device connected (IP: "${socket.handshake.address}")`});
     
+    socket.on('connection_with_type', type => {
+        io.emit('console_msg', { msg: `a device connected as ${type} (IP: "${socket.handshake.address}")`});
+    })
+
     socket.on('check_answer', ans => {
         if (ans == SECRET){
             io.emit('console_msg', { msg: `Answer was submitted: "${ans}" - CORRECT`, correct: true })

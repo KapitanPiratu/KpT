@@ -17,9 +17,11 @@
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
         let socket = io();
+        socket.emit('connection_with_type', 'Secondary')
+
         socket.on('console_msg', msg => {
             if (msg.correct === true){
-                location.href = '/?page=alert?audio=false'
+                location.href = '/?page=alert&audio=false'
             }
         })
 

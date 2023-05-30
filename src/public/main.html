@@ -101,7 +101,8 @@
         })
 
         let socket = io();
-        
+        socket.emit('connection_with_type', 'Main')
+
         document.getElementById('btn').addEventListener('click', e => {
             e.preventDefault()
             let msg = '';
@@ -119,7 +120,14 @@
             if(msg.correct === false){
                 window.alert('Špatný kód')
             }else if (msg.correct === true){
-                location.href = '/?page=alert&audio=true'
+                document.querySelector('body').insertAdjacentHTML('beforeend',`
+                <audio autoplay>
+                    <source src="http://localhost:3000/audio" type="audio/ogg" />
+                    <source src="http://localhost:3000/audio" type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                </audio>
+                `)
+                window.open('/?page=alert&audio=true', '_blank').focus();
             }
         })
 

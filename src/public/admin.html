@@ -5,21 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kvarta pro Tercii</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: rgb(54, 54, 54);
+            color: #fff;
+        }
+        .console{
+            overflow: scroll;
+            overflow-x: hidden;
+            flex-direction: column-reverse;
+            margin: 1rem;
+            padding: 1rem;
+            background-color: rgb(37, 37, 37);
+            width: 23vw;
+            height: 38vw;
+            border-color: #fff;
+            border-width: 0.3rem;
+            border-style: solid;
+            border-radius: 16px;
+        }
+        p{
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>Admin</h1>
 
-    <ul id="console"></ul>
+    <div class="console" id="console"></div>
 
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
 
         let socket = io()
+        socket.emit('connection_with_type', 'Admin')
+
         socket.on('console_msg', msg => {
-            let element = document.createElement('li');
-            element.textContent = msg.msg;
+            let element = document.createElement('p');
+            element.innerHTML = msg.msg;
             document.getElementById('console').appendChild(element);
+            document.getElementById('console').scrollTo(0);
         })
     </script>
 </body>
