@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
     console.log('a user connected');
     
     socket.on('connection_with_type', type => {
-        io.emit('console_msg', { msg: `a device connected as ${type} (IP: "${socket.handshake.address}")`});
+        io.emit('console_msg', { msg: `a device connected as ${type} (IP: "${socket.conn.remoteAddress}")`});
         io.emit('console_msg', { msg: `loaded secret code: ${code}`});
     })
 
