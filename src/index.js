@@ -6,8 +6,9 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const baseCode = '1234';
+const baseCode = '6091';
 let code = baseCode;
+let audioTrack = '2'; //default track
 
 app.use(express.static('public'));
 
@@ -35,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/audio', (req, res) => {
-    const file = __dirname + '/public/alarm.mp3';
+    const file = __dirname + `/public/media/${audioTrack}.mp3`;
     fs.exists(file, (exists) => {
         if (exists) {
             const rstream = fs.createReadStream(file);
@@ -74,7 +75,24 @@ io.on('connection', (socket) => {
                 }
                 break;
             case 'activate':
-                io.emit('console_msg', { msg: 'Activated animation', correct: true })
+                io.emit('console_msg', { msg: 'Activated animation', correct: true });
+                break;
+            case 'audio':
+                if (msg.command[1] == 'set'){
+                    let track = msg.command[2];
+                    const file = __dirname + `/public/media/${track}.mp3`;
+                    fs.exists(file, exists => {
+                        if (exists){
+                            audioTrack = track;
+                            io.emit('console_msg', { msg: `succesfully changed the audio track to: '${track}'` });
+                        }else{
+                            io.emit('console_msg', { msg: `!! failed to change the audio track: could not find '${track}'` });
+                        }
+                    });
+                }else{
+                    io.emit('console_msg',{ msg: `the current audio track is: ${audioTrack}` });
+                }
+                break;
             default:
                 break;
         }
